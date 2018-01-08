@@ -13,7 +13,7 @@ Sagemaker will execute training script which is hosted in S3. **Different traini
 There are two docker images available: Dockerfile.cpu, Dockerfile.gpu.
 Docker files have pre-installed Python3, Keras with TensorFlow backend.
 
-##### Build docker file and upload to AWS ECR:
+### Build docker file and upload to AWS ECR:
 
 Save credentials in environment variables via:
 ```
@@ -34,7 +34,7 @@ GPU:
 
 build_and_upload.sh script will output ARN of Docker image in AWS ECR.
 
-##### Prepare input data and training script
+### Prepare input data and training script
 
 Create and copy desired python script which contains ML model into S3 location. Script has to have name "train.py":
 ```
@@ -50,7 +50,7 @@ Sagemaker will copy entire content of input data to local disk, including "scrip
 Docker image includes "train" script, which will be executed by Sagemaker Training job.
 "train" script will look into input folder and execute "input/data/scripts/train.py" downloaded from S3.
 
-##### Schedule training job
+### Schedule training job
 
 Training job can be scheduled from Sagemaker notebook instance:
 
@@ -124,7 +124,7 @@ All output of the model will be stored in:
 s3://[BUCKET]/ml/output
 ```
 
-## Local testing
+### Local testing
 
 local_test includes sample train script for classification of cifar dataset.
 
