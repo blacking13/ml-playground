@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+
+from __future__ import print_function
+
+import os
+import json
+import sys
+import traceback
+from os import walk
+
+prefix = '/opt/ml/'
+
+input_path = prefix + 'input/data/training'
+script_path = os.path.join(input_path, 'scripts/train.py')
+
+output_path = os.path.join(prefix, 'output')
+model_path = os.path.join(prefix, 'model')
+param_path = os.path.join(prefix, 'input/config/hyperparameters.json')
+
+# The function to execute the training.
+def train():
+    print('Starting training: ' + script_path)
+    try:
+        print ('All input files:' + input_path)
+        for (dirpath, dirnames, filenames) in walk(input_path, followlinks=False):
+            print (dirnames)
+            print (filenames)
+            break
+
+        print ('Finished.')
+
+        exec(open(script_path).read(), globals())
+
+        print('Training completed')
+    except Exception as e:
+
+        # Write out an error file. This will be returned as the failureReason in the
+        # DescribeTrainingJob result.
+        trc = traceback.format_exc()
+        with open(os.path.join(output_path, 'failure'), 'w') as s:
+            s.write('Exception during training: ' + str(e) + '\n' + trc)
+        # Printing this causes the exception to be in the training job logs, as well.
+        print('Exception during training: ' + str(e) + '\n' + trc)
+        print('Exception during training: ' + str(e) + '\n' + trc, file=sys.stderr)
+        # A non-zero exit code causes the training job to be marked as Failed.
+        sys.exit(255)
+
+
+if __name__ == '__main__':
+    train()
+
+    # A zero exit code causes the job to be marked a Succeeded.
+    sys.exit(0)
